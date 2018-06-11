@@ -82,11 +82,12 @@ def readState(fileName, HList, VList, boundingBoxes, particleStates, particleMom
 			del temp[:]
 
 		temp = []
-		for i in range(0,len(parsedString[2])-1,4):
+		for i in range(0,len(parsedString[2])-1,5):
 			temp.append(eval(parsedString[2][i]))
 			temp.append(eval(parsedString[2][i+1]))
 			temp.append(eval(parsedString[2][i+2]))
 			temp.append(eval(parsedString[2][i+3]))
+			temp.append(eval(parsedString[2][i+4]))
 			boundingBoxes.append(temp[:])
 			del temp[:]
 

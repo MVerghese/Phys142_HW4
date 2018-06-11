@@ -142,12 +142,13 @@ bool readState(string fileName, vecvec &HList, vecvec &VList, vecvec &boundingBo
     	VList.push_back(temp);
     }
 
-	for(int i=0; i < data[2].size(); i+=4) {
+	for(int i=0; i < data[2].size(); i+=5) {
     	vector<double> temp;
 		temp.push_back(stod(data[2][i]));
     	temp.push_back(stod(data[2][i+1]));
     	temp.push_back(stod(data[2][i+2]));
-    	temp.push_back(stod(data[2][i+3]));    	
+    	temp.push_back(stod(data[2][i+3]));
+    	temp.push_back(stod(data[2][i+4]));    	
     	boundingBoxes.push_back(temp);
     }
 
