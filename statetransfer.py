@@ -3,7 +3,7 @@ import csv
 
 
 
-def writeState(fileName, HList, VList, particleStates):
+def writeState(fileName, HList, VList, boundingBoxes, particleStates, particleMomentums):
 	F = open(fileName, 'w')
 	HString = ""
 	for barrier in HList:
@@ -23,6 +23,15 @@ def writeState(fileName, HList, VList, particleStates):
 	VString+= '\n'
 	F.write(VString)
 
+	boundingBoxesString = ""
+	for box in boundingBoxes:
+		for coord in box:
+			boundingBoxesString+= str(coord)+','
+
+	boundingBoxesString = boundingBoxesString[:-1]
+	boundingBoxesString+= '\n'
+	F.write(boundingBoxesString)
+
 	particleStateString = ""
 	for particle in particleStates:
 		for coord in particle:
@@ -31,11 +40,19 @@ def writeState(fileName, HList, VList, particleStates):
 	particleStateString += '\n'
 	F.write(particleStateString)
 
+	particleMomentumString = ""
+	for particle in particleMomentums:
+		for coord in particle:
+			particleMomentumString+= str(coord)+','
+	particleMomentumString = particleMomentumString[:-1]
+	particleMomentumString += '\n'
+	F.write(particleMomentumString)
+
 	F.close()
 
 	return True
 
-def readState(fileName, HList, VList, particleStates):
+def readState(fileName, HList, VList, boundingBoxes, particleStates, particleMomentums):
 	with open(fileName, 'rb') as f:
 		out = csv.reader(f, delimiter=',')
 
@@ -44,7 +61,9 @@ def readState(fileName, HList, VList, particleStates):
 			parsedString.append(row)	
 		del HList[:]
 		del VList[:]
+		del boundingBoxes[:]
 		del particleStates[:]
+		del particleMomentums[:]
 
 		temp = []
 		for i in range(0,len(parsedString[0])-1,3):
@@ -63,10 +82,26 @@ def readState(fileName, HList, VList, particleStates):
 			del temp[:]
 
 		temp = []
-		for i in range(0,len(parsedString[2])-1,2):
+		for i in range(0,len(parsedString[2])-1,4):
 			temp.append(eval(parsedString[2][i]))
 			temp.append(eval(parsedString[2][i+1]))
+			temp.append(eval(parsedString[2][i+2]))
+			temp.append(eval(parsedString[2][i+3]))
+			boundingBoxes.append(temp[:])
+			del temp[:]
+
+		temp = []
+		for i in range(0,len(parsedString[3])-1,2):
+			temp.append(eval(parsedString[3][i]))
+			temp.append(eval(parsedString[3][i+1]))
 			particleStates.append(temp[:])
+			del temp[:]
+
+		temp = []
+		for i in range(0,len(parsedString[4])-1,2):
+			temp.append(eval(parsedString[4][i]))
+			temp.append(eval(parsedString[4][i+1]))
+			particleMomentums.append(temp[:])
 			del temp[:]
 
 		f.close()
@@ -75,9 +110,12 @@ def readState(fileName, HList, VList, particleStates):
 
 
 def main():
-	HList = [];
-	VList = [];
-	particleStates = [];
+	HList = []
+	VList = []
+	boundingBoxes = []
+	particleStates = []
+	particleMomentums = []
+
 	for i in range (0,5):
 		temp1 = []
 		temp2 = []
@@ -94,12 +132,14 @@ def main():
 
 		particleStates.append(temp3[:])
 
-	#writeState("test.txt", HList, VList, particleStates)
-	readState("test.txt", HList, VList, particleStates)
+	writeState("test.txt", HList, VList, boundingBoxes, particleStates, particleMomentums)
+	readState("test.txt", HList, VList, boundingBoxes, particleStates, particleMomentums)
 
 	print(HList)
 	print(VList)
+	print(boundingBoxes)
 	print(particleStates)
+	print(particleMomentums)
 
 
 main()
